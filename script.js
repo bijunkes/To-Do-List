@@ -28,26 +28,35 @@ function renderizar() {
     atividades.filter(filtrarAtividades).forEach((a, i) => {
         const li = document.createElement("li");
 
-        const span = document.createElement("span");
-        span.textContent = a.texto;
-        if (a.concluida) span.style.textDecoration = "line-through";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = a.concluida;
 
-        span.addEventListener("click", () => {
-            a.concluida = !a.concluida;
+        checkbox.addEventListener("click", () => {
+            a.concluida = checkbox.checked;
             salvar();
             renderizar();
         });
 
+        const span = document.createElement("span");
+        span.textContent = a.texto;
+        if (a.concluida) span.style.textDecoration = "line-through";
+
         const btnEditar = document.createElement("button");
-        btnEditar.textContent = "Editar";
+        btnEditar.classList.add("material-icons", "icone");
+        btnEditar.textContent = "edit";
         btnEditar.onclick = () => editar(i);
 
         const btnExcluir = document.createElement("button");
-        btnExcluir.textContent = "Excluir";
+        btnExcluir.classList.add("material-icons", "icone");
+        btnExcluir.textContent = "delete";
         btnExcluir.onclick = () => excluir(i);
 
-
-        li.append(span, btnEditar, btnExcluir);
+        const acoes = document.createElement("div");
+        acoes.classList.add("acoes");
+        
+        acoes.append(btnEditar, btnExcluir);
+        li.append(checkbox, span, acoes);
         lista.appendChild(li);
     });
 }
@@ -59,12 +68,22 @@ function excluir(i) {
 }
 
 function editar(i) {
-    const novoTexto = prompt("Editar:", atividades[i].texto);
-    if (novoTexto && novoTexto.trim() !== "") {
-        atividades[i].texto = novoTexto.trim();
+    const novoTexto = document.createElement("input");
+    novoTexto.type = "text";
+    novoTexto.value = atividades[i].texto;
+
+    novoTexto.onblur = () => {
+        atividades[i].texto = novoTexto.value.trim() || atividades[i].texto;
         salvar();
         renderizar();
     }
+
+    novoTexto.onkeydown = (e) => {
+        if (e.key === "Enter") novoTexto.blur();
+    }
+
+    lista.children[i].querySelector("span").replaceWith(novoTexto);
+    novoTexto.focus();
 }
 
 function salvar() {

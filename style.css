@@ -1,0 +1,28 @@
+li {
+    display: flex;
+}
+
+.acoes {
+    display: none;
+}
+
+li:hover .acoes {
+    display: flex;
+}
+
+button {
+    cursor: pointer;
+}
+
+.material-icons.icone {
+  font-size: 14px;
+  line-height: 1;
+  color: #555;
+  cursor: pointer;
+  user-select: none;
+}
+
+.icone:hover {
+  color: #000;
+  transform: scale(1.1);
+}
